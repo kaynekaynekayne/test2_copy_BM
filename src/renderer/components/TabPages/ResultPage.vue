@@ -137,6 +137,14 @@
                               </b-col>
                             </b-row>
                           </b-popover>
+
+                          <!--is checked-->
+                          <span v-if="item.IS_CHECKED" style="float:right">
+                            <b-icon v-if="item.SIGNED_STATE !== 'Submit'" 
+                              icon="check-circle" variant="success"></b-icon>
+                            <b-icon v-else icon="check-circle" variant="primary"></b-icon>
+                          </span>
+
                         </td>
                         <td>
                           <b-form-checkbox
@@ -510,6 +518,13 @@
       this.endDate = this.searchOptions.endDate
       this.wbcClassList = this.searchOptions.wbcClassList
 
+      // 콘솔 찍으려고 임시
+      ipcRenderer.on(Constant.UPDATE_CHECKED_CELL, function (event, results) {
+        console.log(results)
+        // (2) ["Y", "20230918172821_01_0013,5.79"]
+      })
+
+      
       // 셀렉트 박스 on/off
       this.onChangeSelectBox()
 
@@ -994,6 +1009,15 @@
         self.barcodeImages = []
         self.$store.dispatch(Constant.SET_CLASSIFICATION_ITEM, { item: item, limit: self.limit })
 
+        console.log("💦💦💦💦💦")
+        console.log("💦💦💦💦💦")
+        console.log("💦💦💦💦💦")
+        console.log(item)
+        console.log("💦💦💦💦💦")
+        console.log("💦💦💦💦💦")
+        console.log("💦💦💦💦💦")
+
+
         ipcRenderer.send(Constant.GET_RBC_COUNT, JSON.stringify({orderId: item.ORDER_ID}))
 
         try {
@@ -1320,7 +1344,12 @@
         return ((Number(count) / totalCount) * 100).toFixed(0)
       },
       onDbClick (item) {
-        console.log(item)
+        var self = this
+        ipcRenderer.send(Constant.UPDATE_CHECKED_CELL, JSON.stringify({
+          isChecked:"Y",
+          slotId:self.selectItem.SLOT_ID
+        }));
+
         this.$router.push({path: '/homePage/resultClassification/' + item.SLOT_ID})
       },
       onClickClass (item) {

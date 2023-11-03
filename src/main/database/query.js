@@ -39,12 +39,13 @@ export default Object.freeze({
      , CELLULARITY
      , ME_RATIO
      , IS_NORMAL
+     , IS_CHECKED
      , CREATE_DTTM
      , CREATE_ID
      , MODIFY_DTTM
      , MODIFY_ID
    )
-  VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+  VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
 
   SEARCH_TEST_HISTORY_LIST:
   `SELECT CASSET_ID
@@ -126,6 +127,7 @@ export default Object.freeze({
     , CELLULARITY
     , ME_RATIO
     , IS_NORMAL
+    , IS_CHECKED
     , ROW_NUMBER() OVER(ORDER BY A.ANALYZE_DTTM DESC) AS ROW_NUM
     , (SELECT JSON_GROUP_ARRAY(
 				        JSON_OBJECT('id', B.CLASS_ID, 'title', B.CLASS_TITLE, 'name', B.CLASS_NM, 'count', B.COUNT)
@@ -425,6 +427,7 @@ export default Object.freeze({
     , CELLULARITY
     , ME_RATIO
     , IS_NORMAL
+    , IS_CHECKED
   FROM TB_TEST_HISTORY A
   WHERE ORDER_ID = ?
   ORDER BY ANALYZE_DTTM DESC`,
@@ -596,6 +599,11 @@ export default Object.freeze({
   UPDATE_IS_NORMAL_CELL:
   `UPDATE TB_TEST_HISTORY
     SET IS_NORMAL = ?
+   WHERE SLOT_ID = ?`,
+
+  UPDATE_IS_CHECKED_CELL: 
+  `UPDATE TB_TEST_HISTORY
+     SET IS_CHECKED = ?
    WHERE SLOT_ID = ?`,
 
   UPDATE_RBC_COMMENT:

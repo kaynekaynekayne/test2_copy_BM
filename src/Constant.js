@@ -222,6 +222,7 @@ export default Object.freeze({
   GET_CBC_LIST: 'getCbcList',
   GET_KUMC_CBC_PATH: 'getKumcCbcPath',
   GET_DEFAULT_RBC_DEGREE: 'getDefaultRbcDegree',
+  UPDATE_CHECKED_CELL:'updateCheckedCell',
 
   // diagnosis
   GET_PB_TREE: 'getPbTree',
@@ -332,5 +333,6 @@ export default Object.freeze({
   IDS_PLEASE_SELECT_A_BACKUP_FILE: 'Please select a backup file.',
   IDS_NO_DATA_FOUND: 'No data found.',
   IDS_MSG_DATA_BACKUP: 'Data from that period will be deleted. Would you like to proceed?',
-  IDS_MSG_DATA_RESTORE: 'Do you want to recover your data?'
+  IDS_MSG_DATA_RESTORE: 'Do you want to recover your data?',
+  IDS_MSG_CONFIRM_SLIDE: 'Confirm slide'
 })

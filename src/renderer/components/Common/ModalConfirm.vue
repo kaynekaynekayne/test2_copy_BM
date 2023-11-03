@@ -66,6 +66,8 @@
           this.EventBus.$emit('RESTORE_DATA')
         } else if (this.openType === 'lisUploadSkmc') {
           this.EventBus.$emit('UPLOAD_LIS_SKMC', this.item)
+        } else if (this.openType === 'reportSign') {
+          this.EventBus.$emit('REPORT_SIGN')
         }
 
         this.$emit('close')

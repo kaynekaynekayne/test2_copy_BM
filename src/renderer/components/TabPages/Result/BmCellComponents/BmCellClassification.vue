@@ -9,6 +9,13 @@
             </span>
             <b-icon v-if="isLisShow" class="ml-2 pointer" icon="file-earmark-arrow-up" font-scale="1.1" @click="onClickLisUpload"
               v-b-tooltip.hover title="upload to lis (F9)" style="color: white;"></b-icon>
+            <b-icon v-if="isLisShow" class="ml-2 pointer"
+              icon="check-square"
+              font-scale="1.1"
+              @click="onCommit"
+              v-b-tooltip.hover title="submit"
+              style="color: #82FA58;"></b-icon>
+
           </div>
           <div id="divBmInfoWrapper">
             <div class="mt-3">
@@ -268,6 +275,9 @@
       })
     },
     methods: {
+      onCommit () {
+        this.EventBus.$emit('ON_CLICK_REPORT_SIGN', null)
+      },
       onClickLisUpload () {
         this.EventBus.$emit('ON_CLICK_LIS', null)
       },

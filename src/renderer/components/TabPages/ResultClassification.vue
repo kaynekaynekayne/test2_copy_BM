@@ -239,6 +239,8 @@
       this.EventBus.$off('WBC_CLASSIFICATION_LOADED')
       this.EventBus.$off('UPLOAD_LIS')
       this.EventBus.$off('UPLOAD_LIS_SKMC')
+      this.EventBus.$off('ON_CLICK_REPORT_SIGN')
+      this.EventBus.$off('REPORT_SIGN')
 
       ipcRenderer.removeAllListeners('selected-dir')
       ipcRenderer.removeAllListeners(Constant.GET_TEST_HISTORY)
@@ -735,6 +737,45 @@
       this.EventBus.$on('UPLOAD_LIS_SKMC', function(params) {
         console.log('UPLOAD_LIS_SKMC')
         self.uploadLis()
+      })
+
+      this.EventBus.$on('REPORT_SIGN', function(params) {
+          var obj = {}
+          obj.state = 'Submit'
+          obj.slotId = self.selectedItemSlot.SLOT_ID
+          obj.userId = self.getCurrentUser.userId
+          obj.orderId = self.selectedItemSlot.ORDER_ID
+          
+          console.log("💛💛💛💛💛")
+          console.log("💛💛💛💛💛")
+          console.log("💛💛💛💛💛")
+          console.log(obj.orderId)
+          console.log("💛💛💛💛💛")
+          console.log("💛💛💛💛💛")
+          console.log("💛💛💛💛💛")
+
+
+          // console.log(obj)
+          // {state: "Submit", slotId: "20230927121018_01_20230927122000", userId: "ddddd"}
+          
+          // orderId 보내줘라
+
+          ipcRenderer.send(Constant.UPDATE_SIGNED_STATE, JSON.stringify(obj))
+
+          self.$toasted.show(Constant.IDS_MSG_SUCCESS, {
+            position: 'bottom-center',
+            duration: '2000'
+          })
+      })
+
+      this.EventBus.$on('ON_CLICK_REPORT_SIGN', function(params) {
+        self.$modal.show(ModalConfirm, {openType: 'reportSign', message: Constant.IDS_MSG_CONFIRM_SLIDE}, {
+          height: 'auto',
+          width: '350px'
+        }, {
+          'before-open': self.beforeConfirmOpen,
+          'before-close': self.beforeConfirmClose
+        })        
       })
 
       // lis upload

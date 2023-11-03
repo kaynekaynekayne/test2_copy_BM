@@ -64,6 +64,7 @@ function connect () {
               , CELLULARITY       TEXT
               , ME_RATIO          TEXT
               , IS_NORMAL         TEXT
+              , IS_CHECKED        TEXT
               , CREATE_DTTM       TEXT
               , CREATE_ID         TEXT
               , MODIFY_DTTM       TEXT
@@ -493,7 +494,7 @@ process.on('message', (message) => {
         try {
           let db = connect()
 
-          log.info(message.sql)
+          (message.sql)
           log.info(message.args)
           db.run(message.sql, message.args, (err, arg) => {
             if (err) {

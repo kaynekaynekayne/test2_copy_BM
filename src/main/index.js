@@ -259,7 +259,7 @@ function updateIsNormalCell(payload) {
   var params = JSON.parse(payload)
   var updateArgs = []
 
-  updateArgs.push(params.isNormal)
+  updateArgs.push()
   updateArgs.push(params.slotId)
 
   sqliteChild.send({msg: 'UPDATE', sql: query.UPDATE_IS_NORMAL_CELL, args: updateArgs})
@@ -757,7 +757,11 @@ ipcMain.on(Constant.UPDATE_SIGNED_STATE, (event, payload) => {
   args.push(params.userId)
   args.push(params.orderId)
 
-  sqliteChild.send({msg: 'INSERT', sql: query.UPDATE_SIGNED_STATE, args: args})
+  log.info(args)
+
+  // (6) ["Submit", "20231103154136", "ddddd", "20231103154136", "ddddd", null]
+  // insert 아님
+  sqliteChild.send({msg: 'UPDATE', sql: query.UPDATE_SIGNED_STATE, args: args})
 })
 
 ipcMain.on(Constant.UPDATE_TEST_HISTORY, (event, payload) => {
@@ -775,6 +779,7 @@ ipcMain.on(Constant.UPDATE_TEST_HISTORY, (event, payload) => {
 
 // 테스트 결과 저장
 ipcMain.on(Constant.SET_TEST_HISTORY, (event, payload) => {
+
   var params = JSON.parse(payload)
 
   var insertHistArgs = []
@@ -814,6 +819,8 @@ ipcMain.on(Constant.SET_TEST_HISTORY, (event, payload) => {
   insertHistArgs.push(params.cellularity)
   insertHistArgs.push(params.meRatio)
   insertHistArgs.push(params.isNormal)
+  //추가된 isChecked
+  insertHistArgs.push('N')
   insertHistArgs.push(getDateTime())
   insertHistArgs.push(params.userId)
   insertHistArgs.push(getDateTime())
@@ -1125,6 +1132,26 @@ ipcMain.on(Constant.UPDATE_LIS_CONN_PATH, (event, payload) => {
   insertHistArgs.push(params.userId)
 
   sqliteChild.send({msg: 'INSERT', sql: query.UPDATE_LIS_CONN_PATH, args: insertHistArgs})
+})
+
+ipcMain.on(Constant.UPDATE_CHECKED_CELL, (event, payload) => {
+  var params=JSON.parse(payload)
+  var args=[]
+
+  args.push(params.isChecked)
+  args.push(params.slotId)
+  
+  // test1 버전
+  
+  // MySql.UPDATE(query.UPDATE_IS_CHECKED_CELL, args).then(function(ret) {
+  //   event.sender.send(Constant.UPDATE_CHECKED_CELL, ret, null)
+  // }).catch(function(err) {
+  //   event.sender.send(Constant.UPDATE_CHECKED_CELL, null, err)
+  // })
+      
+  // test2
+  sqliteChild.send({msg: 'UPDATE', sql: query.UPDATE_IS_CHECKED_CELL, args: args})
+  // args: ["Y", "20230918172821_01_0013,5.79"]
 })
 
 ipcMain.on(Constant.GET_RBC_COUNT, (event, payload) => {
@@ -1577,10 +1604,13 @@ ipcMain.on(Constant.RESTORE_BACKUP_DATA, (event, payload) => {
       insertHistArgs.push(item.CELLULARITY)
       insertHistArgs.push(item.ME_RATIO)
       insertHistArgs.push(item.IS_NORMAL)
+      // 추가된 isChecked 관련
+      insertHistArgs.push("N")
       insertHistArgs.push(item.CREATE_DTTM)
       insertHistArgs.push(item.CREATE_ID)
       insertHistArgs.push(item.MODIFY_DTTM)
       insertHistArgs.push(item.MODIFY_ID)
+
 
       sqliteChild.send({msg: 'INSERT', sql: query.INSERT_TEST_HISTORY, args: insertHistArgs})
 
