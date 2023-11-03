@@ -254,14 +254,6 @@
       })
 
       this.EventBus.$on('UPLOAD_ORDER_COMP', function(params) {
-        console.log("orderlisttab에서 UPLOAD_ORDER_COMP ON")
-        console.log("orderlisttab에서 UPLOAD_ORDER_COMP ON")
-        console.log("orderlisttab에서 UPLOAD_ORDER_COMP ON")
-        console.log(params)
-        console.log("orderlisttab에서 UPLOAD_ORDER_COMP ON")
-        console.log("orderlisttab에서 UPLOAD_ORDER_COMP ON")
-        console.log("orderlisttab에서 UPLOAD_ORDER_COMP ON")
-
         var samplingSide = ''
         var stainType = params.addStainInput
         var cellCount = params.cellCountInput

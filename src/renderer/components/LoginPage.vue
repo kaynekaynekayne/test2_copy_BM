@@ -100,7 +100,6 @@
     },
     beforeDestroy () {
       ipcRenderer.removeAllListeners(Constant.GET_USER_LIST)
-      ipcRenderer.removeAllListeners('INIT_DATABASE')
     },
     mounted () {
       var self = this
@@ -108,7 +107,7 @@
       console.log('mount login')
       document.getElementById('loginPage').style.height = window.innerHeight + 'px'
 
-      ipcRenderer.send('INIT_DATABASE', {dbPath: this.getSettings.pbiaRootPath})
+      // ipcRenderer.send('INIT_DATABASE', {dbPath: this.getSettings.pbiaRootPath})
 
       ipcRenderer.send(Constant.GET_USER_LIST)
       ipcRenderer.on(Constant.GET_USER_LIST, function (event, result) {
@@ -192,9 +191,9 @@
         }
 
         // db file dir
-        if (!fs.existsSync(this.getSettings.pbiaRootPath.replace('IA_Proc', '') + Configs.DB_FILE_PATH)) {
-          fs.mkdirSync(this.getSettings.pbiaRootPath.replace('IA_Proc', '') + Configs.DB_FILE_PATH)
-        }
+        // if (!fs.existsSync(this.getSettings.pbiaRootPath.replace('IA_Proc', '') + Configs.DB_FILE_PATH)) {
+        //   fs.mkdirSync(this.getSettings.pbiaRootPath.replace('IA_Proc', '') + Configs.DB_FILE_PATH)
+        // }
       },
       checkVersion () {
         var self = this

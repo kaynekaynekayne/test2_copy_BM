@@ -137,7 +137,9 @@
   import ProgressBar from './ProgressBar.vue'
   import Configs from '../../Configs'
   import Package from '../../../package.json'
-  import normalTcp from './Plugins/TcpClient/normal_tcp.js'
+  // import normalTcp from './Plugins/TcpClient/normal_tcp.js'
+
+  // 로그인 / 로그아웃 제대로 안 되던 문제
   // import Store from 'electron-store';
   // const store = new Store({ name: 'vuex' });
   // store.clear();
@@ -233,11 +235,6 @@
               'before-close': self.beforeClose
             })
           }
-
-          // load 카세트 없음, unload 카세트 없음
-          // if (event.data.params.resultCd === '00501' || event.data.params.resultCd === '00502') {
-          //   self.commonReceive(event.data.params)
-          // }
 
           // running info 종료
           if (self.runningIntervalId !== null) {
@@ -975,18 +972,18 @@
           this.errMessage = params.resultMsg
         } else if (jobCmd === 'SYSINFO') {
           if (params.resultCd === '00000') {
-            if (params.isDoorOpen === 'Y') {
-              self.isDoorOpen = true
-            } else {
-              self.isDoorOpen = false
-            }
+            // if (params.isDoorOpen === 'Y') {
+            //   self.isDoorOpen = true
+            // } else {
+            //   self.isDoorOpen = false
+            // }
+            //
+            // self.eqStatCd = params.eqStatCd
+            // self.oilCount = params.oilCount
+            // self.isConnect = true
 
-            self.eqStatCd = params.eqStatCd
-            self.oilCount = params.oilCount
-            self.isConnect = true
-
-            self.$store.dispatch(Constant.SET_SITE_CD, params.siteCd)
-            self.$store.dispatch(Constant.SET_DEVICE_BARCODE, params.deviceBarcode)
+            // self.$store.dispatch(Constant.SET_SITE_CD, params.siteCd)
+            // self.$store.dispatch(Constant.SET_DEVICE_BARCODE, params.deviceBarcode)
 
             // isRecovery 추가
             if (params.isRecovery === 'Y') {

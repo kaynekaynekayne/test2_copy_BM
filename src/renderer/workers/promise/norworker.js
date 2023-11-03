@@ -17,6 +17,8 @@ function onReceiveData (buff) {
     // var totalLength = Number(buff.toString().substring(0, 7))
     // var body = buff.toString().substring(7, buff.toString().length)
     //
+    // console.log(body)
+    //
     // if (isNaN(totalLength)) {
     //   bufStr += buff.toString()
     // } else {
@@ -24,6 +26,10 @@ function onReceiveData (buff) {
     //   bufStr += body
     // }
     // bodyLen = bufStr.length
+    //
+    // console.log('header length : ' + headerLength)
+    // console.log('total length : ' + totalLength)
+    // console.log('bodyLen : ' + bodyLen)
     //
     // if (headerLength == bodyLen) {
     //   self.postMessage({params: JSON.parse(bufStr)})
@@ -41,11 +47,13 @@ function onReceiveData (buff) {
 
   } catch (e) {
     bufStr = ''
+    // bodyLen = 0
   }
 }
 
 async function initConnToServer (callback) {
   console.log('initConnToServer')
+  
   if (!client || !client.writable) {
     client = new net.Socket()
     client.connect({port: port, host: addr, keepAlive: false}, callback)
@@ -57,6 +65,9 @@ async function initConnToServer (callback) {
       } catch (e) {
         console.log('onDataError', e.message)
       }
+    })
+    client.on('end', function (e) {
+      // console.log('connection end!!!')
     })
     client.on('error', function (e) {
       console.log(e.message)
@@ -74,14 +85,21 @@ async function sendToServer (requestObj) {
   // if (!client || client.destroyed) {
   //   await initConnToServer()
   // }
+  //
+  // if (requestObj && requestObj.length > 0) {
+  //   if (client.connecting) {
+  //     requestObj += '\n'
+  //     client.write(requestObj)
+  //   }
+  // }
 
+  console.log('send msg : ' + requestObj)
   if (!client || !client.writable) {
     await initConnToServer(function() {
       // console.log(requestObj)
       if (requestObj && requestObj.length > 0) {
         if (client.writable) {
           requestObj += '\n'
-          // console.log('write')
           client.write(requestObj)
         }
       }
@@ -90,12 +108,61 @@ async function sendToServer (requestObj) {
     if (requestObj && requestObj.length > 0) {
       if (client.writable) {
         requestObj += '\n'
-        // console.log('write')
+        console.log('write 2')
         client.write(requestObj)
       }
     }
   }
 }
+
+// function getConnection(connName) {
+//   var client = net.connect({port: port, host: addr}, function() {
+//     // this.setTimeout(500);
+//     this.setEncoding('utf8');
+//     this.on('data', function(data) {
+//       try {
+//         onReceiveData(data)
+//       } catch (e) {
+//         console.log('onDataError', e.message)
+//       }
+//       this.end();
+//     });
+//     this.on('end', function() {
+//       console.log(connName + ' Client disconnected');
+//     });
+//     this.on('error', function(err) {
+//       console.log('Socket Error: ', JSON.stringify(err));
+//     });
+//     this.on('timeout', function() {
+//       console.log('Socket Timed Out');
+//     });
+//     this.on('close', function() {
+//       console.log('Socket Closed');
+//     });
+//   });
+//   return client;
+// }
+//
+// function writeData(socket, data) {
+//   var success = !socket.write(data);
+//   if (!success){
+//     (function(socket, data){
+//       socket.once('drain', function(){
+//         writeData(socket, data);
+//       });
+//     })(socket, data);
+//   }
+// }
+//
+// function sendToServer (requestObj) {
+//   if (!client || client.destroyed) {
+//     console.log('connnnnnn')
+//     client = getConnection()
+//   }
+//
+//   console.log(client)
+//   writeData(client, requestObj)
+// }
 
 self.onmessage = function (event) {
   if (event.data.type === 'sendDataToServer') {

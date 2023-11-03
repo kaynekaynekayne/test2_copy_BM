@@ -191,7 +191,8 @@
       this.addStainList = this.commonCodeList(Constant.GET_CODE_LIST_ADD_STAIN)
       // 2021_06_16_LBK : stitch count
       this.stitchCountList = this.commonCodeList(Constant.GET_STITCH_COUNT)
-
+      console.log(this.stitchCountList)
+      
       this.EventBus.$on('NEW_ORDER', function(params) {
         self.isNewOrder = params
         self.loadElementState()
@@ -203,14 +204,6 @@
       })
 
       this.EventBus.$on('UPLOAD_ORDER', function(params) {
-        console.log("orderoption에서 UPLOAD_ORDER ON")
-        console.log("orderoption에서 UPLOAD_ORDER ON")
-        console.log("orderoption에서 UPLOAD_ORDER ON")
-        console.log(params)
-        console.log("orderoption에서 UPLOAD_ORDER ON")
-        console.log("orderoption에서 UPLOAD_ORDER ON")
-        console.log("orderoption에서 UPLOAD_ORDER ON")
-
         params.addStainInput = self.modelData.addStainInput
         params.analysisType = self.modelData.analysisType
         params.cellCount = self.modelData.cellCount
@@ -223,15 +216,6 @@
         params.stitchCountInput = self.modelData.stitchCountInputs
 
         self.EventBus.$emit('UPLOAD_ORDER_COMP', params)
-        console.log("orderoption에서 UPLOAD_ORDER_COMP EMIT")
-        console.log("orderoption에서 UPLOAD_ORDER_COMP EMIT")
-        console.log("orderoption에서 UPLOAD_ORDER_COMP EMIT")
-        console.log(params)
-        console.log("orderoption에서 UPLOAD_ORDER_COMP EMIT")
-        console.log("orderoption에서 UPLOAD_ORDER_COMP EMIT")
-        console.log("orderoption에서 UPLOAD_ORDER_COMP EMIT")
-        
-
       })
 
       this.loadElementState()

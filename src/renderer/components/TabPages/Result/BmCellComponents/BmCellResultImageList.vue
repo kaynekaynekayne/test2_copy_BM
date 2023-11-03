@@ -1058,188 +1058,184 @@
         console.log(evt.key.toLowerCase())
         var self = this
         var key = evt.key.toLowerCase()
-        // var classList = null
         var targetItem = null
         var hotKey = null
 
-        if (this.selectedItem.ANALYSIS_TYPE !== '01') {
-          hotKey = this.bmHotKey
-        }
+        if (key === 'delete') {
+          console.log(this.$getSelectrions())
+          var items = this.$getSelectrions().items
+          items.forEach(function (item, index) {
+            console.log(item.currentSrc)
+            var path = item.currentSrc.replace('file:///', '')
+            console.log(path)
 
-        console.log(hotKey)
-        hotKey.forEach(function (item, index) {
-          if (item.HOT_KEY === evt.key.toLowerCase()) {
-            self.removeMarker()
-            targetItem = item
-          }
-        })
-
-        if (targetItem !== null) {
-          for (var len = self.$getSelectrions().items.length, i = 0; i < len; i++) {
-            if (self.$getSelectrions().owner !== null) {
-
-              var maxSize = len
-              var url = self.$getSelectrions().items[i].currentSrc.split('/')
-              var fileName = url[url.length - 1]
-              var rootPath = self.settings.pbiaRootPath + '/' + self.selectedItem.SLOT_ID
-              var classDirName = self.settings.bmClassificationDirNm
-
-              var srcId = (this.$getSelectrions().owner.id).replace('area_', '')
-              var targetId = (targetItem.CLASS_ID + '_' + targetItem.CLASS_TITLE).replace('area_', '')
-              var srcPath = rootPath + '/' + classDirName + '/' + srcId + '/' + fileName
-              var destPath = rootPath + '/' + classDirName + '/' + targetId + '/' + fileName
-
-              // 파일 폴더 이동
-              self.EventBus.$emit('OVERLAY', {state: true})
-
-              // 파일 폴더 이동
-              var params = {
-                srcPath: srcPath,
-                destPath: destPath,
-                isNsNbIntegration: self.getIsNsNbIntegration
-              }
-
-              console.log(params)
-              console.log(self.drawClassList)
-              console.log(srcId)
-              console.log(targetId)
-              console.log(self.selectedItem.IS_NS_NB_INTEGRATION)
-
-              api.moveFile(params).then(function(ret) {
-                self.moveCnt++
-
-                var targetSectionName = ''
+            // 파일 or 폴더 존재 여부 체크
+            fs.access(path, function(err) {
+              if (!err) {
+                // 파일 삭제
+                fs.unlinkSync(path)
 
                 // change models
-                self.drawClassList.forEach(function(item) {
-                  // delete
-                  if (srcId.includes(item.id)) {
-                    item.count--
-                    item.images.splice(item.images.indexOf('file://' + ret.srcPath), 1)
-                  }
+                self.drawClassList.forEach(function(drawItem) {
+                  drawItem.images.forEach(function(image) {
+                    var imgPath = image.replace('file://', '')
 
-                  // insert
-                  if (targetId.includes(item.id)) {
-                    item.count++
-                    item.images.splice(0, 0, 'file://' + ret.destPath)
-                    targetSectionName = 'area_' + item.id + '_' + item.title
-                  }
+                    if (path === imgPath) {
+                      // delete
+                      drawItem.count--
+                      drawItem.images.splice(drawItem.images.indexOf(image), 1)
+                    }
+                  })
                 })
 
-                // if (targetSectionName === '') {
-                //   throw new Error('target not found!')
-                // }
+                self.setImageStyle()
+                self.EventBus.$emit('UPDATE_HIST_LIST', lodash.cloneDeep(self.drawClassList))
+              }
+            })
+          })
 
-                // WBC 이미지 변경 로그 저장 (rollback)
-                var histObj = {}
-                histObj.userId = self.currentUser.userId
-                histObj.modifyDttm = self.$getDateTime()
-                histObj.seqNo = self.$getUuid()
-                histObj.srcPath = srcPath
-                histObj.destPath = destPath
-                histObj.groupId = self.$getUuid()
+          // ipcRenderer.send(Constant.GET_TEST_HISTORY, JSON.stringify({orderId: this.selectedItem.ORDER_ID}))
+          // this.loadClassificationImages()
+        } else {
+          if (this.selectedItem.ANALYSIS_TYPE !== '01') {
+            hotKey = this.bmHotKey
+          }
 
-                self.$store.dispatch(Constant.SET_WBC_IMAGE_HIST, histObj)
+          console.log(hotKey)
+          hotKey.forEach(function (item, index) {
+            if (item.HOT_KEY === evt.key.toLowerCase()) {
+              self.removeMarker()
+              targetItem = item
+            }
+          })
 
-                // complete move files
-                if (self.moveCnt === maxSize) {
-                  self.$nextTick(function () {
-                    setTimeout(function() {
-                      self.moveCnt = 0
+          if (targetItem !== null) {
+            for (var len = self.$getSelectrions().items.length, i = 0; i < len; i++) {
+              if (self.$getSelectrions().owner !== null) {
 
-                      // 이미지 조정후 이동시 사이즈 동일하게 조정
-                      // 2021_09_02_LBK : brightness 조정
-                      console.log(targetSectionName)
-                      var images = document.getElementById(targetSectionName).querySelectorAll('img')
+                var maxSize = len
+                var url = self.$getSelectrions().items[i].currentSrc.split('/')
+                var fileName = url[url.length - 1]
+                var rootPath = self.settings.pbiaRootPath + '/' + self.selectedItem.SLOT_ID
+                var classDirName = self.settings.bmClassificationDirNm
 
-                      self.drawClassList.forEach(function(classItem) {
-                         if (classItem.name === targetSectionName) {
-                           for (var i = 0; i < images.length; i++) {
-                             if (typeof(classItem.imgWidth) !== 'undefined') {
-                               images[i].style.width = classItem.imgWidth
-                             } else {
-                               images[i].style.width = self.imgWidth
-                             }
-                           }
-                         }
-                       })
+                var srcId = (this.$getSelectrions().owner.id).replace('area_', '')
+                var targetId = (targetItem.CLASS_ID + '_' + targetItem.CLASS_TITLE).replace('area_', '')
+                var srcPath = rootPath + '/' + classDirName + '/' + srcId + '/' + fileName
+                var destPath = rootPath + '/' + classDirName + '/' + targetId + '/' + fileName
 
-                      // marker
-                      if (self.isMarker) {
-                        self.drawCellMarker()
-                      }
+                // 파일 폴더 이동
+                self.EventBus.$emit('OVERLAY', {state: true})
 
-                      // update hist
-                      self.EventBus.$emit('UPDATE_HIST_LIST', lodash.cloneDeep(self.drawClassList))
-                      self.EventBus.$emit('OVERLAY', {state: false})
-
-                      // drag 활성화
-                      self.$initDrag()
-                      self.setRgbColor()
-                    })
-                  })
+                // 파일 폴더 이동
+                var params = {
+                  srcPath: srcPath,
+                  destPath: destPath,
+                  isNsNbIntegration: self.getIsNsNbIntegration
                 }
 
-              }).catch(function (err) {
-                console.log(err)
+                api.moveFile(params).then(function(ret) {
+                  self.moveCnt++
 
-                // draw cell marker
-                setTimeout(function() {
-                  if (self.isMarker) {
-                    self.drawCellMarker()
-                    self.moveCnt = 0
-                  }
-                  self.EventBus.$emit('OVERLAY', {state: false})
-                  self.$toasted.show(err.message, {
-                    position: 'bottom-center',
-                    duration: '2000'
+                  var targetSectionName = ''
+
+                  // change models
+                  self.drawClassList.forEach(function(item) {
+                    // delete
+                    if (srcId.includes(item.id)) {
+                      item.count--
+                      item.images.splice(item.images.indexOf('file://' + ret.srcPath), 1)
+                    }
+
+                    // insert
+                    if (targetId.includes(item.id)) {
+                      item.count++
+                      item.images.splice(0, 0, 'file://' + ret.destPath)
+                      targetSectionName = 'area_' + item.id + '_' + item.title
+                    }
                   })
-                }, 0)
 
-              })
+                  // if (targetSectionName === '') {
+                  //   throw new Error('target not found!')
+                  // }
 
-              // self.moveFile(params, targetFileName, 'APPEND_TAB').then(function(ret) {
-              //   self.moveCnt++
-              //   if (self.moveCnt === params.data.maxSize) {
-              //     self.$nextTick(function () {
-              //       // draw cell marker
-              //       setTimeout(function() {
-              //         if (self.isMarker) {
-              //           self.drawCellMarker()
-              //           self.moveCnt = 0
-              //         }
-              //         self.EventBus.$emit('UPDATE_HIST_LIST', lodash.cloneDeep(ret))
-              //         self.moveCnt = 0
-              //         self.EventBus.$emit('OVERLAY', {state: false})
-              //       }, 0)
-              //     })
-              //   }
-              // }).catch(function (err) {
-              //   console.log(err)
-              //   self.$toasted.show(err, {
-              //     position: 'bottom-center',
-              //     duration: '2000'
-              //   })
-              //
-              //   self.$nextTick(function () {
-              //     // draw cell marker
-              //     setTimeout(function() {
-              //       if (self.isMarker) {
-              //         self.drawCellMarker()
-              //         self.moveCnt = 0
-              //       }
-              //     }, 0)
-              //     self.EventBus.$emit('OVERLAY', {state: false})
-              //   })
-              // })
-            } else {
-              self.$toasted.show(Constant.IDS_ERROR_SELECT_A_TARGET_ITEM, {
-                position: 'bottom-center',
-                duration: '2000'
-              })
+                  // WBC 이미지 변경 로그 저장 (rollback)
+                  var histObj = {}
+                  histObj.userId = self.currentUser.userId
+                  histObj.modifyDttm = self.$getDateTime()
+                  histObj.seqNo = self.$getUuid()
+                  histObj.srcPath = srcPath
+                  histObj.destPath = destPath
+                  histObj.groupId = self.$getUuid()
+
+                  self.$store.dispatch(Constant.SET_WBC_IMAGE_HIST, histObj)
+
+                  // complete move files
+                  if (self.moveCnt === maxSize) {
+                    self.$nextTick(function () {
+                      setTimeout(function() {
+                        self.moveCnt = 0
+
+                        // 이미지 조정후 이동시 사이즈 동일하게 조정
+                        // 2021_09_02_LBK : brightness 조정
+                        console.log(targetSectionName)
+                        var images = document.getElementById(targetSectionName).querySelectorAll('img')
+
+                        self.drawClassList.forEach(function(classItem) {
+                           if (classItem.name === targetSectionName) {
+                             for (var i = 0; i < images.length; i++) {
+                               if (typeof(classItem.imgWidth) !== 'undefined') {
+                                 images[i].style.width = classItem.imgWidth
+                               } else {
+                                 images[i].style.width = self.imgWidth
+                               }
+                             }
+                           }
+                         })
+
+                        // marker
+                        if (self.isMarker) {
+                          self.drawCellMarker()
+                        }
+
+                        // update hist
+                        self.EventBus.$emit('UPDATE_HIST_LIST', lodash.cloneDeep(self.drawClassList))
+                        self.EventBus.$emit('OVERLAY', {state: false})
+
+                        // drag 활성화
+                        self.$initDrag()
+                        self.setRgbColor()
+                      })
+                    })
+                  }
+
+                }).catch(function (err) {
+                  console.log(err)
+
+                  // draw cell marker
+                  setTimeout(function() {
+                    if (self.isMarker) {
+                      self.drawCellMarker()
+                      self.moveCnt = 0
+                    }
+                    self.EventBus.$emit('OVERLAY', {state: false})
+                    self.$toasted.show(err.message, {
+                      position: 'bottom-center',
+                      duration: '2000'
+                    })
+                  }, 0)
+                })
+
+              } else {
+                self.$toasted.show(Constant.IDS_ERROR_SELECT_A_TARGET_ITEM, {
+                  position: 'bottom-center',
+                  duration: '2000'
+                })
+              }
             }
           }
         }
+
       },
       loadMarkerPosition (evt) {
         var rootPath = this.settings.pbiaRootPath + '/' + this.selectedItem.SLOT_ID

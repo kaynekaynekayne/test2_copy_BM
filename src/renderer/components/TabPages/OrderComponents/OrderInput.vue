@@ -215,11 +215,6 @@
       onUpload () {
         this.modelData.selectedTestType = this.selectedTestType
         this.EventBus.$emit('UPLOAD_ORDER', this.modelData)
-        console.log("orderinput에서 UPLOAD_ORDER EMIT")
-        console.log("orderinput에서 UPLOAD_ORDER EMIT")
-        console.log("orderinput에서 UPLOAD_ORDER EMIT")
-        console.log("orderinput에서 UPLOAD_ORDER EMIT")
-        console.log("orderinput에서 UPLOAD_ORDER EMIT")
 
         if (Number(this.modelData.slotNo) < 12) {
           this.modelData.slotNo = String(Number(this.modelData.slotNo) + 1)

@@ -71,8 +71,8 @@ const state = {
     { grpCd: '14', grpNm: 'Slot state', cd: '03', cdNm: 'Analyzing'},
     { grpCd: '14', grpNm: 'Slot state', cd: '04', cdNm: 'Complete'},
     { grpCd: '14', grpNm: 'Slot state', cd: '05', cdNm: 'Error'},
-    // { grpCd: '15', grpNm: 'Stitch count', cd: '00', cdNm: '0 count'},
-    // { grpCd: '15', grpNm: 'Stitch count', cd: '01', cdNm: '1 count'},
+    { grpCd: '15', grpNm: 'Stitch count', cd: '00', cdNm: '0 count'},
+    { grpCd: '15', grpNm: 'Stitch count', cd: '01', cdNm: '1 count'},
     { grpCd: '15', grpNm: 'Stitch count', cd: '02', cdNm: '2 count'},
     { grpCd: '15', grpNm: 'Stitch count', cd: '03', cdNm: '3 count'},
     { grpCd: '15', grpNm: 'Stitch count', cd: '04', cdNm: '4 count'}

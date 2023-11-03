@@ -744,17 +744,8 @@
           obj.state = 'Submit'
           obj.slotId = self.selectedItemSlot.SLOT_ID
           obj.userId = self.getCurrentUser.userId
-          obj.orderId = self.selectedItemSlot.ORDER_ID
+          obj.orderId = self.selectedItemSlot.ORDER_ID          
           
-          console.log("💛💛💛💛💛")
-          console.log("💛💛💛💛💛")
-          console.log("💛💛💛💛💛")
-          console.log(obj.orderId)
-          console.log("💛💛💛💛💛")
-          console.log("💛💛💛💛💛")
-          console.log("💛💛💛💛💛")
-
-
           // console.log(obj)
           // {state: "Submit", slotId: "20230927121018_01_20230927122000", userId: "ddddd"}
           

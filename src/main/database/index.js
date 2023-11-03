@@ -494,7 +494,7 @@ process.on('message', (message) => {
         try {
           let db = connect()
 
-          (message.sql)
+          log.info(message.sql)
           log.info(message.args)
           db.run(message.sql, message.args, (err, arg) => {
             if (err) {

@@ -53,6 +53,7 @@
           // off ruler
           self.EventBus.$emit('SET_RULER', {id: 'none'})
         }
+
       })
 
       this.EventBus.$on('RECEIVE_DATA_BARCODE', function(params) {

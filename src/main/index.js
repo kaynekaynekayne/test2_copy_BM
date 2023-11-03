@@ -259,7 +259,7 @@ function updateIsNormalCell(payload) {
   var params = JSON.parse(payload)
   var updateArgs = []
 
-  updateArgs.push()
+  updateArgs.push(params.isNormal)
   updateArgs.push(params.slotId)
 
   sqliteChild.send({msg: 'UPDATE', sql: query.UPDATE_IS_NORMAL_CELL, args: updateArgs})
@@ -627,6 +627,8 @@ app.on('ready', () => {
 
   // 메인 윈도우 생성
   createWindow()
+  
+  sqliteChild.send({msg: 'INIT', path: Configs.DB_FILE_PATH + '/bm.db'})
 
   // if (process.env.NODE_ENV !== 'production') {
   //   autoUpdater.updateConfigPath = path.join(__dirname, 'dev-app-update.yml')
@@ -709,7 +711,7 @@ ipcMain.on('open-file-dialog-restore', async (event, pathType) => {
 ipcMain.on('open-save-dialog', async (event, pathType) => {
   dialog.showSaveDialog({}, (filename) => {
     if (filename) {
-      fs.copyFileSync(Configs.DB_FILE_NAME, filename + '.db')
+      fs.copyFileSync(Configs.DB_FILE_PATH, filename + '.db')
       event.sender.send("backup-success", null)
     }
   })
@@ -760,7 +762,8 @@ ipcMain.on(Constant.UPDATE_SIGNED_STATE, (event, payload) => {
   log.info(args)
 
   // (6) ["Submit", "20231103154136", "ddddd", "20231103154136", "ddddd", null]
-  // insert 아님
+  // args.push(params.orderId) 안 넣어놔서 null 떴었음 넣어줘야 됨
+  // INSERT 아님 UPDATE로 수정
   sqliteChild.send({msg: 'UPDATE', sql: query.UPDATE_SIGNED_STATE, args: args})
 })
 
