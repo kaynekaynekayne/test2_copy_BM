@@ -1009,15 +1009,6 @@
         self.barcodeImages = []
         self.$store.dispatch(Constant.SET_CLASSIFICATION_ITEM, { item: item, limit: self.limit })
 
-        console.log("💦💦💦💦💦")
-        console.log("💦💦💦💦💦")
-        console.log("💦💦💦💦💦")
-        console.log(item)
-        console.log("💦💦💦💦💦")
-        console.log("💦💦💦💦💦")
-        console.log("💦💦💦💦💦")
-
-
         ipcRenderer.send(Constant.GET_RBC_COUNT, JSON.stringify({orderId: item.ORDER_ID}))
 
         try {

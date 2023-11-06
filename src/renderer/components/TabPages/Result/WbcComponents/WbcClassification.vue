@@ -9,6 +9,13 @@
             </span>
             <b-icon v-if="isLisShow" class="ml-2 pointer" icon="file-earmark-arrow-up" font-scale="1.1" @click="onClickLisUpload"
               v-b-tooltip.hover title="upload to lis (F9)" style="color: white;"></b-icon>
+            <b-icon v-if="isLisShow" class="ml-2 pointer"
+              icon="check-square"
+              font-scale="1.1"
+              @click="onCommit"
+              v-b-tooltip.hover title="submit"
+              style="color: #82FA58;"></b-icon>
+
           </div>
           <div id="divWbcWrapper">
             <b-row class="mt-2">
@@ -342,6 +349,9 @@
         } else if (this.$route.path.indexOf('finalReport') > 0) {
           this.EventBus.$emit('WBC_CLASSIFICATION_LOADED', lodash.cloneDeep(this.wbcClassList))
         }
+      },
+      onCommit () {
+        this.EventBus.$emit('ON_CLICK_REPORT_SIGN', null)
       },
       onClickLisUpload () {
         this.EventBus.$emit('ON_CLICK_LIS', null)
